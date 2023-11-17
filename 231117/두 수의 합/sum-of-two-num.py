@@ -13,7 +13,7 @@ for number in nums:
     if (k - number) not in count:
         continue
     if (k - number) == number:
-        ans += len(count[number]) * (len(count[number]) - 1) / 2
+        ans += len(count[number]) * (len(count[number]) - 1) // 2
     else:
         ans += len(count[number]) * len(count[k - number])
     visited[number] = True
