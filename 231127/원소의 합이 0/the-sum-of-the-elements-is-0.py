@@ -7,11 +7,13 @@ def solution():
     for i in range(n):
         for j in range(n):
             ab_counter[a_list[i] + b_list[j]] += 1
-            cd_counter[c_list[i] + d_list[j]] += 1
+            
     answer = 0
-    for ab in ab_counter:
-        if -ab in cd_counter:
-            answer += ab_counter[ab] * cd_counter[-ab]
+    for i in range(n):
+        for j in range(n):
+            cd = c_list[i] + d_list[j]
+            if -cd in ab_counter:
+                answer += ab_counter[-cd]
     print(answer)
 
 if __name__ == "__main__":
