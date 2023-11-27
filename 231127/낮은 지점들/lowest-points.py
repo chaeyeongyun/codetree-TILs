@@ -5,11 +5,11 @@ n = int(input().rstrip())
 for _ in range(n):
     x, y = map(int, input().rstrip().split(" "))
     if x in coordinates:
-        heappush(coordinates[x], y)
+        coordinates[x] = min(coordinates[x], y)
     else:
-        coordinates[x] = [y]
+        coordinates[x] = y
 
 answer = 0
 for x in coordinates:
-    answer += coordinates[x][0]
+    answer += coordinates[x]
 print(answer)
