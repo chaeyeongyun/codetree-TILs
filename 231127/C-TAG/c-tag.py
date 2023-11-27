@@ -13,11 +13,12 @@ def test_location(x, y, z):
 def solution():
     global n, m, a_group, b_group
     answer = 0
-    for i in range(m):
+    for i in range(m): # O(M**3)
         for j in range(i + 1, m):
             for k in range(j + 1, m):
-                if test_location(i, j, k):
+                if test_location(i, j, k): # O(N)
                     answer += 1
+    # 전체 : O(NM**3)
     print(answer)
 
 if __name__ == "__main__":
