@@ -1,15 +1,22 @@
 def solution():
     global n, g, groups, member_cnt, person_to_group
     answer = 0 
+    visited = [False] * (n + 1)
     stack = [1]
     while stack:
-        answer += 1
         nxt = stack.pop()
+        if visited[nxt]:
+            continue
+        answer += 1
         for g in person_to_group[nxt]:
             groups[g].remove(nxt)
             if len(groups[g]) == 1:
-                for v in groups[g]:
+                v = groups[g].pop()
+                if not visited[v]:
+                    groups[g].add(v)
                     stack.append(v)
+        visited[nxt] = True
+
     print(answer)
 
 if __name__ == "__main__":
