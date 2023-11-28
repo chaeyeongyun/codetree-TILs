@@ -27,7 +27,7 @@ for _ in range(t):
         elif cnt == 0:
             # case 2. mid보다 큰 값 두개가 들어왔을 때
             # right_min_heap에거 가장 작은 값이 mid가 되고 원래 mid는 left_max_heap에 들어간다
-            heappush(left_max_heap, mid)
+            heappush(left_max_heap, -mid)
             mid = heappop(right_min_heap)
         elif cnt == 1:
             # case 3. mid보다 큰 값 하나, 작은 값 하나 들어왔을때
