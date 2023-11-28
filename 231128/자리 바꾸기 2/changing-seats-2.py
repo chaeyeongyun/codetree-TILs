@@ -10,8 +10,10 @@ def solution():
         for i in range(k):
             a, b = change[i]
             positions[a], positions[b] = positions[b], positions[a]
-            pos_record[positions[a]].add(a)
-            pos_record[positions[b]].add(b)
+            if a not in pos_record[positions[a]]:
+                pos_record[positions[a]].add(a)
+            if b not in pos_record[positions[b]]:
+                pos_record[positions[b]].add(b)
             
     for i in range(1, n + 1):
         print(len(pos_record[i]))
