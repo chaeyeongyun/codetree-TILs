@@ -9,10 +9,7 @@ def solution():
     for _ in range(3):
         for i in range(k):
             a, b = change[i]
-            temp = positions[a]
-
-            positions[a] = positions[b]
-            positions[b] = temp
+            positions[a], positions[b] = positions[b], positions[a]
             pos_record[positions[a]].add(a)
             pos_record[positions[b]].add(b)
             
