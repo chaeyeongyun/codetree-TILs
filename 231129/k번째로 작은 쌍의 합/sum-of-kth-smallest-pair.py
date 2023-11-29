@@ -5,6 +5,8 @@ MAX_INT = sys.maxsize
 def solution():
     global n, m, j, a_list, b_list
     q = []
+    a_list.sort()
+    b_list.sort()
     answer = MAX_INT
     for i in range(n):
         for j in range(m):
@@ -20,12 +22,8 @@ def solution():
                 heappop(q)
                 heappush(q, -cand)
             elif cand >= answer:
-                pass
+                break
     print(answer)
-            
-
-            
-
 
 if __name__ == "__main__":
     n, m, k = map(int, input().rstrip().split(" "))
