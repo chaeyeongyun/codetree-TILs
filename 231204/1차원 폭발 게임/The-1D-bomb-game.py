@@ -3,6 +3,8 @@ from collections import deque
 def solution():
     global n, m, bombs
     result = []
+    if m == 0:
+        return result
     end = False
     while not end:
         boom = False
@@ -33,15 +35,14 @@ def solution():
         if not end:
             bombs = result[:]
             result = []
-        
+    return result    
     
-    print(len(result))
-    for r in result:
-        print(r)
-
             
 
 if __name__ == "__main__":
     n, m = map(int, input().rstrip().split(" "))
     bombs = [int(input().rstrip()) for _ in range(n)]
-    solution()
+    result = solution()
+    print(len(result))
+    for r in result:
+        print(r)
