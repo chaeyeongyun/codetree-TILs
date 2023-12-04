@@ -20,11 +20,10 @@ def solution():
             else:
                 if cnt >= m:
                     boom = True
-                    result.append(bombs[i])
                 else:
                     for _ in range(cnt):
                         result.append(past)
-                    result.append(bombs[i])
+                result.append(bombs[i])
                 cnt = 0
             past = bombs[i]
             # print("cnt", cnt)
