@@ -1,23 +1,20 @@
-def down(row, col, block):
-    # col열의 row행 이하 블럭들이 block만큼 내려가는 코드
-    global grid
-    for i in range(row, -1, -1):
-        if i - block < 0:
-            grid[i][col] = 0
-        else:
-            grid[i][col] = grid[i - block][col]
-
 def solution():
     global n, grid, r, c
     bomb_size = grid[r][c]
-    # 한 칸씩만 내려오면 되는 열
-    for i in range(1, bomb_size):
-        if c >= i:
-            down(r, c - i, 1)
-        if (c + i) < n:
-            down(r, c + i, 1)
-    # 여러칸 내려가야하는 중심 열
-    down(min(r + bomb_size - 1, n - 1), c, 2 * bomb_size - 1)
+    temp_grid = [y[:] for y in grid]
+    for i in range(r + 1):
+        for j in range(max(0, c - bomb_size + 1), min(c + bomb_size - 1, n - 1) + 1):
+            if j == c:
+                continue
+            if i == 0:
+                grid[i][j] = 0
+            else:
+                grid[i][j] = temp_grid[i - 1][j]
+    for i in range(min(n, r + bomb_size)):
+        if i >= 2 * bomb_size - 1:
+            grid[i][c] = grid[i - 2 * bomb_size + 1][c]
+        else:
+            grid[i][c] = 0
     for g in grid:
         print(*g)
     
