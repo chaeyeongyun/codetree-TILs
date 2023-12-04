@@ -12,7 +12,7 @@ def solution():
                 grid[i][j] = temp_grid[i - 1][j]
     for i in range(min(n, r + bomb_size)):
         if i >= 2 * bomb_size - 1:
-            grid[i][c] = grid[i - 2 * bomb_size + 1][c]
+            grid[i][c] = temp_grid[i - 2 * bomb_size + 1][c]
         else:
             grid[i][c] = 0
     for g in grid:
