@@ -3,7 +3,7 @@ from collections import deque
 def solution():
     global n, m, bombs
     result = []
-    if m == 0:
+    if m == 1:
         return result
     end = False
     while not end:
