@@ -21,14 +21,12 @@ def solution():
                 if cnt >= m:
                     boom = True
                 else:
-                    for _ in range(cnt):
-                        result.append(past)
+                    result += [past] * cnt
                 result.append(bombs[i])
                 cnt = 0
             past = bombs[i]
-            # print("cnt", cnt)
-            # print("past", past)
-            # print("result", result)
+        if cnt < m:
+            result += [past] * cnt
         if not boom:
             end = True
         if not end:
