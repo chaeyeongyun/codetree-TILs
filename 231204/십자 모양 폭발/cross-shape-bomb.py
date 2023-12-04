@@ -17,7 +17,7 @@ def solution():
         if (c + i) < n:
             down(r, c + i, 1)
     # 여러칸 내려가야하는 중심 열
-    down(min(r + bomb_size + 1, n - 1), c, 2 * bomb_size - 1)
+    down(min(r + bomb_size - 1, n - 1), c, 2 * bomb_size - 1)
     for g in grid:
         print(*g)
     
