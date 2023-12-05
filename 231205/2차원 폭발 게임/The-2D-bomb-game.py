@@ -70,14 +70,18 @@ if __name__ == "__main__":
     n, m, k = map(int, input().rstrip().split(" "))
     grid = [list(map(int, input().rstrip().split(" "))) for _ in range(n)]
     for _ in range(k):
-        is_bomb = True
-        while is_bomb:
+        while True:
             is_bomb = bomb()
-            drop()
+            if is_bomb:
+                drop()
+            else:
+                break
         rotate90()
         drop()
-    is_bomb = True
-    while is_bomb:
+    while True:
         is_bomb = bomb()
-        drop()
+        if is_bomb:
+            drop()
+        else:
+            break
     print(count_bomb())
