@@ -12,13 +12,13 @@ def bomb():
     global n, m, grid
     next_grid = [[0] * n for _ in range(n)]
     if m == 1:
+        # m은 1인 경우 값이 존재한다면 모두 폭발
         grid = [y[:] for y in next_grid]
         for i in range(n):
             for j in range(n):
                 if grid[i][j]:
                     return True
         return False
-
     is_bomb = False
     for j in range(n):
         # 연속 개수 카운트
