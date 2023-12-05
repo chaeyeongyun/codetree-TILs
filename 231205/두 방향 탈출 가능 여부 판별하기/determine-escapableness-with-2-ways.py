@@ -2,12 +2,12 @@
 # 방문하지 않았고 -> 오른쪽 혹은 아래로만 가니깐 이럴일이 없을거같은디..
 # 범위 안에 있어야함
 def in_range(nx, ny):
-    global n
-    return 0 <= nx < n and 0 <= ny < n
+    global n, m
+    return 0 <= nx < n and 0 <= ny < m
 
 def dfs(i, j):
-    global n, answer
-    if i == n - 1 and j == n - 1:
+    global n, m, answer
+    if i == n - 1 and j == m - 1:
         answer = True
         return
     # 오른쪽 혹은 아래쪽만 이동 가능
