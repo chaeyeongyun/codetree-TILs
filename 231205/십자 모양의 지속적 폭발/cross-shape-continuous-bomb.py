@@ -35,8 +35,8 @@ if __name__ == "__main__":
     # n = 격자 크기, m = 떨어질 횟수
     n, m = map(int, input().rstrip().split(" "))
     grid = [list(map(int, input().rstrip().split(" "))) for _ in range(n)]
-    for _ in range(m):
-        col = int(input().rstrip()) - 1
+    cols = [int(input().rstrip()) - 1 for _ in range(m)]
+    for col in cols:
         bomb(col)
     for g in grid:
         print(*g)
