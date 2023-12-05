@@ -29,11 +29,12 @@ def bomb():
                 if i >= 1 and grid[i - 1][j] == grid[i][j]:
                     # 이전값과 연속이면
                     cnt += 1
-                elif cnt >= m:
-                    # 연속이 아니고 이전 연속값이 m개 이상이어서 터져야하는 경우
-                    is_bomb = True
-                    for c in range(1, cnt + 1):
-                        next_grid[i - c][j] = 0
+                else:
+                    if cnt >= m:
+                        # 연속이 아니고 이전 연속값이 m개 이상이어서 터져야하는 경우
+                        is_bomb = True
+                        for c in range(1, cnt + 1):
+                            next_grid[i - c][j] = 0
                     cnt = 1
                 next_grid[i][j] = grid[i][j]
         # 마지막요소까지 연속값이라서 미처 터지지 못한 경우
