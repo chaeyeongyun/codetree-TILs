@@ -11,6 +11,14 @@ def bomb():
     """터지는 위치 0으로 채우기"""
     global n, m, grid
     next_grid = [[0] * n for _ in range(n)]
+    if m == 1:
+        grid = [y[:] for y in next_grid]
+        for i in range(n):
+            for j in range(n):
+                if grid[i][j]:
+                    return True
+        return False
+
     is_bomb = False
     for j in range(n):
         # 연속 개수 카운트
@@ -21,7 +29,7 @@ def bomb():
                 if i >= 1 and grid[i - 1][j] == grid[i][j]:
                     # 이전값과 연속이면
                     cnt += 1
-                if cnt >= m:
+                elif cnt >= m:
                     # 연속이 아니고 이전 연속값이 m개 이상이어서 터져야하는 경우
                     is_bomb = True
                     for c in range(1, cnt + 1):
