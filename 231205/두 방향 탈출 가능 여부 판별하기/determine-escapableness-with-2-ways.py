@@ -9,6 +9,7 @@ def dfs(i, j):
     global n, answer
     if i == n - 1 and j == n - 1:
         answer = True
+        return
     # 오른쪽 혹은 아래쪽만 이동 가능
     dx = [0, 1]
     dy = [1, 0]
