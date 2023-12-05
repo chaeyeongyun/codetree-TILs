@@ -1,3 +1,6 @@
+import sys
+sys.setrecursionlimit(10**9)
+
 def flood(k):
     """k이하 높이 아파트 0으로 만들기"""
     global n, m, grid
