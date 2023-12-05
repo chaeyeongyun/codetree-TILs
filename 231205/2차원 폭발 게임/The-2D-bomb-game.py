@@ -16,13 +16,12 @@ def bomb():
         # 연속 개수 카운트
         cnt = 1
         for i in range(n):
-            
             if grid[i][j]:
                 # 빈 칸이 아닌 경우
                 if i >= 1 and grid[i - 1][j] == grid[i][j]:
                     # 이전값과 연속이면
                     cnt += 1
-                elif cnt >= m:
+                if cnt >= m:
                     # 연속이 아니고 이전 연속값이 m개 이상이어서 터져야하는 경우
                     is_bomb = True
                     for c in range(1, cnt + 1):
@@ -62,31 +61,6 @@ def count_bomb():
 if __name__ == "__main__":
     n, m, k = map(int, input().rstrip().split(" "))
     grid = [list(map(int, input().rstrip().split(" "))) for _ in range(n)]
-    # for _ in range(k):
-    #     is_bomb = True
-    #     while is_bomb:
-    #         is_bomb = bomb()
-    #         print("bomb")
-    #         for g in grid:
-    #             print(*g)
-    #         print("\n")
-    #         drop()
-    #         print("drop")
-    #         for g in grid:
-    #             print(*g)
-    #         print("\n")
-    #     rotate90()
-    #     print("rotate")
-    #     for g in grid:
-    #         print(*g)
-    #     print("\n")
-
-    # is_bomb = True
-    # while is_bomb:
-    #     is_bomb = bomb()
-    #     drop()
-    # print(count_bomb())
-
     for _ in range(k):
         is_bomb = True
         while is_bomb:
