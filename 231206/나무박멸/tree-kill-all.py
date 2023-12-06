@@ -76,21 +76,14 @@ def get_max_control_idx():
     max_x, max_y = 0, 0
     for i in range(n):
         for j in range(n):
-            if grid[i][j] > 0:
-                cnt = try_control(i, j)
-            elif grid[i][j] == 0:
-                cnt = 0
+            if grid[i][j] <= 0:
+                continue
+            cnt = try_control(i, j)
             if max_cnt < cnt:
                 max_x, max_y = i, j
                 max_cnt = cnt
     return max_x, max_y, max_cnt
 
-def remove_herbicide():
-    global n, herbicide
-    for i in range(n):
-        for j in range(n):
-            if herbicide[i][j] >= 1:
-                herbicide[i][j] -= 1
 
 def control():
     global n, k, c, grid, herbicide, diag_dx, diag_dy, answer
@@ -113,6 +106,14 @@ def control():
             grid[nx][ny] = 0
             herbicide[nx][ny] = 0
 
+
+def remove_herbicide():
+    global n, herbicide
+    for i in range(n):
+        for j in range(n):
+            if herbicide[i][j] >= 1:
+                herbicide[i][j] -= 1
+                
 def print_info():
     global grid, herbicide
     print("grid")
