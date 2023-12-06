@@ -14,41 +14,47 @@ def cnt_neighbor(i, j, grid):
 
 def grow():
     global n, k, c, grid, herbicide
-    new_grid = [y[:] for y in grid]
     for i in range(n):
         for j in range(n):
-            if grid[i][j] > 0:
-                cnt = cnt_neighbor(i, j, grid)
-                new_grid[i][j] += cnt
-    grid = [y[:] for y in new_grid]
+            if grid[i][j] <= 0:
+                continue
+            cnt = cnt_neighbor(i, j, grid)
+            grid[i][j] += cnt
 
 def can_breed(x, y):
     global grid
     return in_range(x, y) and grid[x][y] == 0 and herbicide[x][y] == 0
 
-def breed_tree(i, j, new_grid):
+def breed_tree(i, j, add_tree):
     global grid, herbicide, dx, dy
     directions = []
     cnt = 0
     for d in range(4):
         nx, ny = i + dx[d], j + dy[d]
-        if can_breed(nx, ny):
+        if not in_range(nx, ny):
+            continue
+        if herbicide[nx][ny]:
+            continue
+        if grid[nx][ny] == 0:
             cnt += 1
             directions.append(d)
     if cnt > 0:
         num_trees = grid[i][j] // cnt
         for d in directions:
             nx, ny = i + dx[d], j + dy[d]
-            new_grid[nx][ny] += num_trees
+            add_tree[nx][ny] += num_trees
 
 def breeding():
     global n, k, c, grid, herbicide, dx, dy
-    new_grid = [y[:] for y in grid]
+    add_tree = [[0] * n for _ in range(n)]
     for i in range(n):
         for j in range(n):
-            if grid[i][j] > 0:
-                breed_tree(i, j, new_grid)
-    grid = [y[:] for y in new_grid]
+            if grid[i][j] <= 0:
+                continue
+            breed_tree(i, j, add_tree)
+    for i in range(n):
+        for j in range(n):
+            grid[i][j] += add_tree[i][j]
 
 def try_control(i, j):
     """i행j열에 제초제 분사할 경우"""
@@ -57,19 +63,17 @@ def try_control(i, j):
     for d in range(4):
         for r in range(1, k + 1):
             nx, ny = i + diag_dx[d] * r, j + diag_dy[d] * r
-            if in_range(nx, ny):
-                if grid[nx][ny] > 0:
-                    cnt += grid[nx][ny]
-                else:
-                    break
+            if not in_range(nx, ny):
+                break
+            if grid[nx][ny] <= 0:
+                break    
+            cnt += grid[nx][ny]
     return cnt
 
 def get_max_control_idx():
-    global n, grid
-    diag_dx = [-1, -1, 1, 1]
-    diag_dy = [-1, 1, -1, 1]
-    max_cnt = -1
-    max_idx = [-1, -1]
+    global n, grid, diag_dx, diag_dy
+    max_cnt = 0
+    max_x, max_y = 0, 0
     for i in range(n):
         for j in range(n):
             if grid[i][j] > 0:
@@ -77,9 +81,9 @@ def get_max_control_idx():
             elif grid[i][j] == 0:
                 cnt = 0
             if max_cnt < cnt:
-                max_idx[0], max_idx[1] = i, j
+                max_x, max_y = i, j
                 max_cnt = cnt
-    return *max_idx, max_cnt
+    return max_x, max_y, max_cnt
 
 def remove_herbicide():
     global n, herbicide
@@ -90,10 +94,8 @@ def remove_herbicide():
 
 def control():
     global n, k, c, grid, herbicide, diag_dx, diag_dy, answer
-    remove_herbicide()
     x, y, cnt = get_max_control_idx()
-    if cnt <= 0:
-        # 빈칸 분사가 최선인 경우이므로 아무일이 일어나지 않는다
+    if grid[x][y] <= 0:
         return
     grid[x][y] = 0
     herbicide[x][y] = c
@@ -101,12 +103,15 @@ def control():
     for d in range(4):
         for r in range(1, k + 1):
             nx, ny = x + diag_dx[d] * r, y + diag_dy[d] * r
-            if in_range(nx, ny):
-                if grid[nx][ny] >= 0:
-                    grid[nx][ny] = 0
-                    herbicide[nx][ny] = c
-                else:
-                    break
+            if not in_range(nx, ny):
+                break
+            if grid[nx][ny] < 0:
+                break
+            if grid[nx][ny] == 0:
+                herbicide[nx][ny] = c
+                break
+            grid[nx][ny] = 0
+            herbicide[nx][ny] = 0
 
 def print_info():
     global grid, herbicide
@@ -130,6 +135,7 @@ if __name__ == "__main__":
     for year in range(m):
         grow()
         breeding()
+        remove_herbicide()
         control()
         # print("year", year)
         # print_info()
