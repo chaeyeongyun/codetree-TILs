@@ -1,137 +1,160 @@
-def in_range(x, y):
-    global n
-    return 0 <= x < n and 0 <= y < n
+# 변수 선언 및 입력:
+n, m, k, c = tuple(map(int, input().split()))
+tree = [[0] * (n + 1)]
+for _ in range(n):
+    tree.append([0] + list(map(int, input().split())))
 
-def cnt_neighbor(i, j, grid):
-    global dx, dy
-    cnt = 0
-    for d in range(4):
-        nx = i + dx[d]
-        ny = j + dy[d]
-        if in_range(nx, ny) and grid[nx][ny] > 0:
-            cnt += 1
-    return cnt
+add_tree = [
+    [0] * (n + 1)
+    for _ in range(n + 1)
+]
+herb = [
+    [0] * (n + 1)
+    for _ in range(n + 1)
+]
 
-def grow():
-    global n, k, c, grid, herbicide
-    new_grid = [[0] * n for _ in range(n)]
-    for i in range(n):
-        for j in range(n):
-            if grid[i][j] > 0:
-                cnt = cnt_neighbor(i, j, grid)
-                new_grid[i][j] = grid[i][j] + cnt
-            elif grid[i][j] == -1:
-                new_grid[i][j] = -1
-    grid = [y[:] for y in new_grid]
+ans = 0
 
-def can_breed(x, y):
-    global grid
-    return in_range(x, y) and grid[x][y] == 0 and herbicide[x][y] == 0
 
-def breed_tree(i, j, new_grid):
-    global grid, herbicide, dx, dy
-    directions = []
-    cnt = 0
-    for d in range(4):
-        nx, ny = i + dx[d], j + dy[d]
-        if can_breed(nx, ny):
-            cnt += 1
-            directions.append(d)
-    if cnt > 0:
-        num_trees = grid[i][j] // cnt
-        for d in directions:
-            nx, ny = i + dx[d], j + dy[d]
-            new_grid[nx][ny] += num_trees
+def is_out_range(x, y):
+    return not (1 <= x and x <= n and 1 <= y and y <= n)
 
-def breeding():
-    global n, k, c, grid, herbicide, dx, dy
-    new_grid = [y[:] for y in grid]
-    for i in range(n):
-        for j in range(n):
-            if grid[i][j] > 0:
-                breed_tree(i, j, new_grid)
-    grid = [y[:] for y in new_grid]
 
-def try_control(i, j):
-    """i행j열에 제초제 분사할 경우"""
-    global n, k, c, grid, diag_dx, diag_dy
-    cnt = grid[i][j]
-    for d in range(4):
-        for r in range(1, k + 1):
-            nx, ny = i + diag_dx[d] * r, j + diag_dy[d] * r
-            if in_range(nx, ny):
-                if grid[nx][ny] > 0:
-                    cnt += grid[nx][ny]
-                else:
+# 1단계 : 인접한 네 개의 칸 중 나무가 있는 칸의 수만큼 나무가 성장합니다.
+def step_one():
+    dxs, dys = [-1, 0, 1, 0], [0, -1, 0, 1]
+
+    for i in range(1, n + 1):
+        for j in range(1, n + 1):
+            if tree[i][j] <= 0: 
+                continue
+
+            # 나무가 있는 칸의 수(cnt)만큼 나무가 성장합니다.
+            cnt = 0
+            for dx, dy in zip(dxs, dys):
+                nx, ny = i + dx, j + dy
+                if is_out_range(nx, ny): 
+                    continue
+                if tree[nx][ny] > 0: 
+                    cnt += 1
+
+            tree[i][j] += cnt
+
+
+# 2단계 : 기존에 있었던 나무들은 아무것도 없는 칸에 번식을 진행합니다.
+def step_two():
+    dxs, dys = [-1, 0, 1, 0], [0, -1, 0, 1]
+
+    # 모든 나무에서 동시에 일어나는 것을 구현하기 위해 하나의 배열을 더 이용합니다.
+    # add_tree를 초기화해줍니다.
+    for i in range(1, n + 1):
+        for j in range(1, n + 1): 
+            add_tree[i][j] = 0
+
+    for i in range(1, n + 1):
+        for j in range(1, n + 1):
+            if tree[i][j] <= 0: 
+                continue
+
+            # 해당 나무와 인접한 나무 중 아무도 없는 칸의 개수를 찾습니다.
+            cnt = 0
+            for dx, dy in zip(dxs, dys):
+                nx, ny = i + dx, j + dy
+                if is_out_range(nx, ny): 
+                    continue
+                if herb[nx][ny]: 
+                    continue
+                if tree[nx][ny] == 0: 
+                    cnt += 1
+
+            # 인접한 나무 중 아무도 없는 칸은 cnt로 나눠준 만큼 번식합니다.
+            for dx, dy in zip(dxs, dys):
+                nx, ny = i + dx, j + dy
+                if is_out_range(nx, ny): 
+                    continue
+                if herb[nx][ny]: 
+                    continue
+                if tree[nx][ny] == 0: 
+                    add_tree[nx][ny] += tree[i][j] // cnt
+    
+    # add_tree를 더해 번식을 동시에 진행시킵니다.
+    for i in range(1, n + 1):
+        for j in range(1, n + 1):
+            tree[i][j] += add_tree[i][j]
+
+
+# 3단계 : 가장 많이 박멸되는 칸에 제초제를 뿌립니다.
+def step_three():
+    global ans
+
+    dxs, dys = [-1, 1, 1, -1], [-1, -1, 1, 1]
+
+    max_del, max_x, max_y = 0, 1, 1
+    for i in range(1, n + 1):
+        for j in range(1, n + 1):
+            # 모든 칸에 대해 제초제를 뿌려봅니다. 각 칸에서 제초제를 뿌릴 시 박멸되는 나무의 그루 수를 계산하고,
+            # 이 값이 최대가 되는 지점을 찾아줍니다.
+            if tree[i][j] <= 0: 
+                continue
+
+            cnt = tree[i][j]
+            for dx, dy in zip(dxs, dys):
+                nx, ny = i, j
+                for _ in range(k):
+                    nx, ny = nx + dx, ny + dy
+                    if is_out_range(nx, ny): 
+                        break
+                    if tree[nx][ny] <= 0: 
+                        break
+                    cnt += tree[nx][ny]
+
+            if max_del < cnt:
+                max_del = cnt
+                max_x = i
+                max_y = j
+
+    ans += max_del
+
+    # 찾은 칸에 제초제를 뿌립니다.
+    if tree[max_x][max_y] > 0:
+        tree[max_x][max_y] = 0
+        herb[max_x][max_y] = c
+
+        for dx, dy in zip(dxs, dys):
+            nx, ny = max_x, max_y
+            for _ in range(k):
+                nx, ny = nx + dx, ny + dy
+                if is_out_range(nx, ny): 
                     break
-    return cnt
-
-def get_max_control_idx():
-    global n, grid
-    diag_dx = [-1, -1, 1, 1]
-    diag_dy = [-1, 1, -1, 1]
-    max_cnt = -1
-    max_idx = [-1, -1]
-    for i in range(n):
-        for j in range(n):
-            if grid[i][j] > 0:
-                cnt = try_control( i, j)
-                if max_cnt < cnt:
-                    max_idx[0], max_idx[1] = i, j
-                    max_cnt = cnt
-    return *max_idx, max_cnt
-
-def remove_herbicide():
-    global n, herbicide
-    for i in range(n):
-        for j in range(n):
-            if herbicide[i][j] >= 1:
-                herbicide[i][j] -= 1
-
-def control():
-    global n, k, c, grid, herbicide, diag_dx, diag_dy, answer
-    remove_herbicide()
-    x, y, cnt = get_max_control_idx()
-    if cnt == -1:
-        return
-    grid[x][y] = 0
-    herbicide[x][y] = c
-    answer += cnt
-    for d in range(4):
-        for r in range(1, k + 1):
-            nx, ny = x + diag_dx[d] * r, y + diag_dy[d] * r
-            if in_range(nx, ny):
-                if grid[nx][ny] > 0:
-                    grid[nx][ny] = 0
-                    herbicide[nx][ny] = c
-                elif grid[nx][ny] == 0:
-                    herbicide[nx][ny] = c
-                else:
+                if tree[nx][ny] < 0: 
+                    break
+                if tree[nx][ny] == 0:
+                    herb[nx][ny] = c
                     break
 
-def print_info():
-    global grid, herbicide
-    print("grid")
-    for g in grid:
-        print(*g)
-    print("\n")
-    print("herbicide")
-    for h in herbicide:
-        print(*h)
-    print("\n")
+                tree[nx][ny] = 0
+                herb[nx][ny] = c
 
-if __name__ == "__main__":
-    n, m, k, c = map(int, input().rstrip().split(" "))
-    grid = [list(map(int, input().rstrip().split(" ")))for _ in range(n)]
-    herbicide = [[0] * n for _ in range(n)]
-    dx = [-1, 1, 0, 0]
-    dy = [0, 0, -1, 1]
-    diag_dx = [-1, -1, 1, 1]
-    diag_dy = [-1, 1, -1, 1]
-    answer = 0
-    for year in range(m):
-        grow()
-        breeding()
-        control()
-        # print_info()
-    print(answer)
+
+# 제초제의 기간을 1년 감소시킵니다.
+def delete_herb():
+    for i in range(1, n + 1):
+        for j in range(1, n + 1): 
+            if herb[i][j] > 0: 
+                herb[i][j] -= 1
+
+
+for _ in range(m):
+    # 1단계 : 인접한 네 개의 칸 중 나무가 있는 칸의 수만큼 나무가 성장합니다.
+    step_one()
+
+    # 2단계 : 기존에 있었던 나무들은 아무것도 없는 칸에 번식을 진행합니다.
+    step_two()
+
+    # 제초제의 기간을 1년 감소시킵니다.
+    delete_herb()
+
+    # 3단계 : 가장 많이 박멸되는 칸에 제초제를 뿌립니다.
+    step_three()
+
+print(ans)
