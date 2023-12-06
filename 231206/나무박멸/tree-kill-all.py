@@ -14,14 +14,12 @@ def cnt_neighbor(i, j, grid):
 
 def grow():
     global n, k, c, grid, herbicide
-    new_grid = [[0] * n for _ in range(n)]
+    new_grid = [y[:] for y in grid]
     for i in range(n):
         for j in range(n):
             if grid[i][j] > 0:
                 cnt = cnt_neighbor(i, j, grid)
-                new_grid[i][j] = grid[i][j] + cnt
-            elif grid[i][j] == -1:
-                new_grid[i][j] = -1
+                new_grid[i][j] += cnt
     grid = [y[:] for y in new_grid]
 
 def can_breed(x, y):
@@ -75,10 +73,12 @@ def get_max_control_idx():
     for i in range(n):
         for j in range(n):
             if grid[i][j] > 0:
-                cnt = try_control( i, j)
-                if max_cnt < cnt:
-                    max_idx[0], max_idx[1] = i, j
-                    max_cnt = cnt
+                cnt = try_control(i, j)
+            elif grid[i][j] == 0:
+                cnt = 0
+            if max_cnt < cnt:
+                max_idx[0], max_idx[1] = i, j
+                max_cnt = cnt
     return *max_idx, max_cnt
 
 def remove_herbicide():
@@ -92,7 +92,8 @@ def control():
     global n, k, c, grid, herbicide, diag_dx, diag_dy, answer
     remove_herbicide()
     x, y, cnt = get_max_control_idx()
-    if cnt == -1:
+    if cnt <= 0:
+        # 빈칸 분사가 최선인 경우이므로 아무일이 일어나지 않는다
         return
     grid[x][y] = 0
     herbicide[x][y] = c
@@ -101,10 +102,8 @@ def control():
         for r in range(1, k + 1):
             nx, ny = x + diag_dx[d] * r, y + diag_dy[d] * r
             if in_range(nx, ny):
-                if grid[nx][ny] > 0:
+                if grid[nx][ny] >= 0:
                     grid[nx][ny] = 0
-                    herbicide[nx][ny] = c
-                elif grid[nx][ny] == 0:
                     herbicide[nx][ny] = c
                 else:
                     break
@@ -114,11 +113,10 @@ def print_info():
     print("grid")
     for g in grid:
         print(*g)
-    print("\n")
     print("herbicide")
     for h in herbicide:
         print(*h)
-    print("\n")
+    print("answer", answer)
 
 if __name__ == "__main__":
     n, m, k, c = map(int, input().rstrip().split(" "))
@@ -133,5 +131,6 @@ if __name__ == "__main__":
         grow()
         breeding()
         control()
+        # print("year", year)
         # print_info()
     print(answer)
