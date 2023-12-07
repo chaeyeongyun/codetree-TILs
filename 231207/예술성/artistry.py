@@ -40,48 +40,63 @@ def grouping():
             group_num += 1
     group_ns = group_num - 1
 
-def pair_scoring(a_group, b_group):
-    """두 그룹 간의 조화로움 점수 계산"""
-    global n, paint, group, group_cnt, group_start
-    dx, dy = [-1, 1, 0, 0], [0, 0, -1, 1]
-    score = group_cnt[a_group] + group_cnt[b_group]
-    score *= paint[group_start[a_group][0]][group_start[a_group][1]]
-    score *= paint[group_start[b_group][0]][group_start[b_group][1]]
-    meet_num = 0
-    visited = [[False] * n for _ in range(n)]
-    visited[group_start[a_group][0]][group_start[a_group][1]] = True
-    q = deque([tuple(group_start[a_group])])
-    while q:
-        x, y = q.popleft()
-        for d in range(4):
-            nx, ny = x + dx[d], y + dy[d]
-            if in_range(nx, ny) and not visited[nx][ny]:
-                if group[nx][ny] == a_group:
-                    q.append((nx, ny))
-                    visited[nx][ny] = True
-                if group[nx][ny] == b_group:
-                    meet_num += 1
-    score *= meet_num
-    return score
+# def pair_scoring(a_group, b_group):
+#     """두 그룹 간의 조화로움 점수 계산"""
+#     global n, paint, group, group_cnt, group_start
+#     dx, dy = [-1, 1, 0, 0], [0, 0, -1, 1]
+#     score = group_cnt[a_group] + group_cnt[b_group]
+#     score *= paint[group_start[a_group][0]][group_start[a_group][1]]
+#     score *= paint[group_start[b_group][0]][group_start[b_group][1]]
+#     meet_num = 0
+#     visited = [[False] * n for _ in range(n)]
+#     visited[group_start[a_group][0]][group_start[a_group][1]] = True
+#     q = deque([tuple(group_start[a_group])])
+#     while q:
+#         x, y = q.popleft()
+#         for d in range(4):
+#             nx, ny = x + dx[d], y + dy[d]
+#             if in_range(nx, ny) and not visited[nx][ny]:
+#                 if group[nx][ny] == a_group:
+#                     q.append((nx, ny))
+#                     visited[nx][ny] = True
+#                 if group[nx][ny] == b_group:
+#                     meet_num += 1
+#     score *= meet_num
+#     return score
+
+# def scoring():
+#     """예술 점수 계산"""
+#     global n, paint, group, group_cnt, group_start, group_ns
+#     sum_score = 0
+#     # 각 쌍의 조화로움 계산
+#     for i in range(1, group_ns + 1):
+#         for j in range(i + 1, group_ns + 1):
+#             score = pair_scoring(i, j)
+#             sum_score += score
+#     return sum_score
 
 def scoring():
-    """예술 점수 계산"""
     global n, paint, group, group_cnt, group_start, group_ns
-    sum_score = 0
-    # 각 쌍의 조화로움 계산
-    for i in range(1, group_ns + 1):
-        for j in range(i + 1, group_ns + 1):
-            score = pair_scoring(i, j)
-            sum_score += score
-    return sum_score
-
+    dx, dy = [-1, 1, 0, 0], [0, 0, -1, 1]
+    # 특정 변을 경계로 하는 칸이 그룹이 다르다면 (a그룹칸수 + b그룹칸수) * a숫자 * b숫자만큼 더해준다
+    # 곱하기의 특성을 활용한 것
+    score = 0
+    for i in range(n):
+        for j in range(n):
+            for d in range(4):
+                nx, ny = i + dx[d], j + dy[d]
+                if in_range(nx, ny) and paint[i][j] != paint[nx][ny]:
+                    a_group, b_group = group[i][j], group[nx][ny]
+                    score += (group_cnt[a_group] + group_cnt[b_group]) * paint[i][j] * paint[nx][ny]
+    return score // 2 # 중복이 생기므로 나누어줌
+                    
 def rotate():
     global n, paint
     # 십자모양 반시계90 회전
     new_paint = [[0] * n for _ in range(n)]
     c = (n - 1) // 2
     for i in range(n):
-        new_paint[n - 1 - c][i] = paint[i][c]
+        new_paint[c][i] = paint[i][c]
         new_paint[n - 1 - i][c] = paint[c][i]
     # 정사각형들 시계 90 회전
     # c x c 격자에 대한 회전으로 구현하고 각 정사각형의 좌상단 좌표만큼 밀어준다
