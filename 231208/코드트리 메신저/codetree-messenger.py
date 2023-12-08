@@ -26,8 +26,8 @@ def change_parents(inp):
     c1_p, c2_p = parents[c1], parents[c2]
     parents[c1], parents[c2] = c2_p, c1_p
     graph[c1_p].remove(c1)
-    graph[c1_p].add(c2)
     graph[c2_p].remove(c2)
+    graph[c1_p].add(c2)
     graph[c2_p].add(c1)
 
 def num_can_alarm(inp):
@@ -35,13 +35,15 @@ def num_can_alarm(inp):
     c = int(inp[0])
     num = 0
     q = deque([(c, 0)])
+    # print("c", c)
     while q:
         node, dist = q.popleft()
         for child in graph[node]:
             if not alarm[child]:
                 continue
             if auths[child] < (dist + 1):
-                continue
+                num -= 1
+            # print("child", child, "dist+1", dist+1, "alarm", alarm[child])
             q.append((child, dist + 1))
             num += 1
     print(num)
