@@ -15,10 +15,8 @@ def dfs(node, d = 0):
             dfs(nxt_node, d + dist)
 
 distance = 0
-visited = [False] * (n + 1)
 for i in range(1, n + 1):
-    if visited[i]:
-        continue
+    visited = [False] * (n + 1)
     visited[i] = True
     dfs(i)
 print(distance)
