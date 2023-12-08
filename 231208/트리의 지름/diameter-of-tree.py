@@ -16,6 +16,8 @@ def dfs(node, d = 0):
 
 distance = 0
 for i in range(1, n + 1):
+    if i in graph[i - 1]:
+        continue
     visited = [False] * (n + 1)
     visited[i] = True
     dfs(i)
