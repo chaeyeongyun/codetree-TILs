@@ -7,18 +7,21 @@ for _ in range(n - 1):
     graph[b].append((a, dist))
 
 def dfs(node, d = 0):
-    global visited, graph, distance
+    global visited, graph, distance, last_node
     for nxt_node, dist in graph[node]:
         if not visited[nxt_node]:
             visited[nxt_node] = True
-            distance = max(distance, d + dist)
+            if distance < d + dist:
+                distance =  d + dist
+                last_node = nxt_node
             dfs(nxt_node, d + dist)
 
 distance = 0
-for i in range(1, n + 1):
-    if i in graph[i - 1]:
-        continue
-    visited = [False] * (n + 1)
-    visited[i] = True
-    dfs(i)
+last_node = 1
+visited = [False] * (n + 1)
+visited[1] = True
+dfs(1)
+visited = [False] * (n + 1)
+visited[last_node] = True
+dfs(last_node)
 print(distance)
