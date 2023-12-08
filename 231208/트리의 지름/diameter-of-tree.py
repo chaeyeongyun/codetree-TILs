@@ -1,4 +1,6 @@
 from collections import defaultdict
+import sys
+sys.setrecursionlimit(10 ** 5)
 n = int(input().rstrip())
 graph = defaultdict(list)
 for _ in range(n - 1):
