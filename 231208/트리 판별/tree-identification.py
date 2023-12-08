@@ -19,4 +19,6 @@ for node in nodes:
     if in_degree[node] > 1:
         answer = False
         break
+if zero_in != 1:
+    answer = False
 print(1 if answer else 0)
