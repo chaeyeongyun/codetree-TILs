@@ -6,7 +6,7 @@ graph = defaultdict(list)
 for i in range(n):
     graph[parents[i]].append(i)
 
-leafs = n - 2
+leafs = n - 2 if parents[rm_node] != -1 else n - 1
 q = deque([rm_node])
 while q:
     node = q.popleft()
