@@ -86,6 +86,7 @@ def boom_rudolf(santa, direction):
     # 연쇄충돌
     r, c = s_r, s_c
     moved = {santa}
+    direc = direction
     while in_range(r, c):
         is_boom = False
         for p in range(1, P + 1):
