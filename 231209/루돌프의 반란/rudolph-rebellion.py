@@ -6,23 +6,8 @@ def in_range(x, y):
     global N
     return 0 <= x < N and 0 <= y < N
 
-# def initialize():
-#     global N, santa_pos, rudolf_pos, is_survive
-#     # board 초기화
-#     for i in range(N):
-#         for j in range(N):
-#             board[i][j] = 0
-#     # 루돌프 마킹
-#     board[rudolf_pos[0]][rudolf_pos[1]] = 0
-#     # 산타 마킹
-#     for p in santa_pos:
-#         if not is_survive[p]:
-#             continue
-#         s_r, s_c = santa_pos[p]
-#         board[s_r][s_c] = p
 def get_distance(r1, c1, r2, c2):
     return (r1 - r2) ** 2 + (c1 - c2) ** 2
-
 
 def rudolf_move():
     global N, P, C, D, santa_pos, rudolf_pos, is_survive, is_faint
@@ -48,22 +33,30 @@ def rudolf_move():
                 if bef_s_c < s_c:
                     min_santa = p
     s_r, s_c = santa_pos[min_santa]
-    if s_r < r_r and s_c < r_c:
-        direc = 4
-    elif s_r < r_r and s_c > r_c:
-        direc = 5
-    elif s_r > r_r and s_c < r_c:
-        direc = 6
-    elif s_r > r_r and s_c > r_c:
-        direc = 7
-    elif s_r == r_r and s_c < r_c:
-        direc = 3
-    elif s_r == r_r and s_c > r_c:
-        direc = 1
-    elif s_r < r_r and s_c == r_c:
-        direc = 0
-    elif s_r > r_r and s_c == r_c:
-        direc = 2
+    min_dist = MAX_INT
+    direc = 0
+    for d in range(8):
+        new_r_r, new_r_c = r_r + dxs[d], r_c + dys[d]
+        dist = get_distance(new_r_r, new_r_c, s_r, s_c)
+        if dist < min_dist:
+            min_dist = dist
+            direc = d
+    # if s_r < r_r and s_c < r_c:
+    #     direc = 4
+    # elif s_r < r_r and s_c > r_c:
+    #     direc = 5
+    # elif s_r > r_r and s_c < r_c:
+    #     direc = 6
+    # elif s_r > r_r and s_c > r_c:
+    #     direc = 7
+    # elif s_r == r_r and s_c < r_c:
+    #     direc = 3
+    # elif s_r == r_r and s_c > r_c:
+    #     direc = 1
+    # elif s_r < r_r and s_c == r_c:
+    #     direc = 0
+    # elif s_r > r_r and s_c == r_c:
+    #     direc = 2
     r_r += dxs[direc]
     r_c += dys[direc]
     rudolf_pos[0], rudolf_pos[1] = r_r, r_c
@@ -244,7 +237,6 @@ if __name__ == "__main__":
         santa_pos[p_n] = [s_r, s_c]
     # 게임 시작
     for turn in range(1, M + 1):
-        # initialize()
         rudolf_move()
         santa_move()
         if is_end():
