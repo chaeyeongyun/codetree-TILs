@@ -98,17 +98,15 @@ def boom_rudolf(santa, direction):
                     is_survive[p] = False
                 is_boom = True
                 break
-            if is_boom:
-                break
         if not is_boom:
             break
 
 def is_santa(r, c):
     """r행 c열에 다른 산타 있는지 체크"""
-    global santa_pos, P
+    global santa_pos, P, is_survive
     for p in range(1, P + 1):
         pr, pc = santa_pos[p]
-        if pr == r and pc == c:
+        if pr == r and pc == c and is_survive[p]:
             return True
     return False
 
@@ -182,8 +180,6 @@ def boom_santa(santa, direction):
                 else:
                     is_survive[p] = False
                 is_boom = True
-                break
-            if is_boom:
                 break
         if not is_boom:
             break
