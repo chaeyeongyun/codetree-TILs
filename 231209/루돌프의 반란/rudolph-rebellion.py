@@ -160,6 +160,7 @@ def boom_santa(santa, direction):
     if not in_range(s_r, s_c):
         # 격자 밖으로 튕길 경우 죽음
         is_survive[santa] = False
+        return
     is_faint[santa] = turn
     # 연쇄충돌
     r, c = s_r, s_c
