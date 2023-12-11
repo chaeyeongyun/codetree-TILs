@@ -9,7 +9,7 @@ def solution():
     out_time = 0
     while people or wait_list:
         if garden is None or not wait_list:
-            garden = heappop(people)
+            garden = people.pop()
             i, a, t = garden
             in_time = a
             out_time = in_time + t
@@ -21,8 +21,8 @@ def solution():
             out_time = in_time + t
             answer = max(answer, (in_time - a))
         
-        while people and people[0][0] < out_time:
-            a, i, t = heappop(people)
+        while people and people[-1][1] < out_time:
+            i, a, t = people.pop()
             heappush(wait_list, (i, a, t))
     print(answer)
 
@@ -34,5 +34,5 @@ if __name__ == "__main__":
         ai, ti = map(int, input().rstrip().split(" "))
         # (a, i, t)로 저장하여 들어온 순으로 추출하되 들어운 시간이 같으면 번호가 작은 것이 나오도록
         people.append((i, ai, ti))
-    people.sort(key=lambda x: x[1])
+    people.sort(key=lambda x: (x[1], x[0]), reverse=True)
     solution()
