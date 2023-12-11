@@ -3,10 +3,6 @@ class Student:
         self.num = num
         self.prev = None
         self.next = None
-    def __repr__(self):
-        pn = "None" if self.prev is None else self.prev.num
-        nn = "None" if self.next is None else self.next.num
-        return f"num {self.num}, prev {pn}, next {nn}"
 
 def insert_next_a(inp):
     global students, cur_student
@@ -58,11 +54,6 @@ def get_prev_next(inp):
         return
     print(f"{students[a].prev.num} {students[a].next.num}")
 
-def print_students():
-    global students
-    for st in students:
-        print(students[st])
-
 if __name__ == "__main__":
     Q = int(input().rstrip())
     students = dict()
@@ -77,4 +68,3 @@ if __name__ == "__main__":
             get_prev_next(inp)
         else:
             raise ValueError
-        # print_students()
