@@ -50,6 +50,9 @@ def insert_prev_a(inp):
 def get_prev_next(inp):
     global students
     a = inp[0]
+    if a not in students:
+        print(-1)
+        return
     if students[a].prev is None or students[a].next is None:
         print(-1)
         return
