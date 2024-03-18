@@ -8,6 +8,6 @@ int main() {
     cin >> n;
     cout << fixed;
     cout.precision(1);
-    cout << n;
+    cout << n * ftcm;
     return 0;
 }
