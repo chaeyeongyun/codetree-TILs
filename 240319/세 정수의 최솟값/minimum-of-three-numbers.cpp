@@ -2,9 +2,9 @@
 
 int min(int a, int b) {
     if (a < b)
-        return a
+        return a;
     else
-        return b
+        return b;
 }
 
 int main() {
