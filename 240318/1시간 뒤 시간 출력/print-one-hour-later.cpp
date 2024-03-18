@@ -7,6 +7,6 @@ int main() {
     int h, m;
     char e;
     std::cin >> h >> e >> m;
-    std::cout << h << ":" << m;
+    std::cout << h + 1 << ":" << m;
     return 0;
 }
