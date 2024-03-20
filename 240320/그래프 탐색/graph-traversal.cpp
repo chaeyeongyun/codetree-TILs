@@ -36,5 +36,7 @@ int main() {
     }
     visited[1] = true;
     dfs(1);
+
+    cout << answer;
     return 0;
 }
