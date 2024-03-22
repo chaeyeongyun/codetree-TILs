@@ -2,7 +2,7 @@
 #define MAXN 1000
 using namespace std;
 
-long long dp[MAXN + 1] = {0, 0, 1, 1, 0, };
+int dp[MAXN + 1] = {0, 0, 1, 1, 0, };
 
 void print_dp(int n) {
     for (int i = 0; i <= n;i++) {
@@ -16,9 +16,9 @@ int main() {
     int n;
     cin >> n;
     for (int i = 4; i <= n; i++) {
-        dp[i] = dp[i - 2] + dp[i - 3];
+        dp[i] = (dp[i - 2] + dp[i - 3]) % 10007;
     }
     //print_dp(n);
-    cout << dp[n] % 10007;
+    cout << dp[n];
     return 0;
 }
