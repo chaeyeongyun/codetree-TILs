@@ -2,7 +2,7 @@
 #define MAXN 1000
 using namespace std;
 
-int dp[MAXN + 1] = {0, 0, 1, 1, 0, };
+long long dp[MAXN + 1] = {0, 0, 1, 1, 0, };
 
 void print_dp(int n) {
     for (int i = 0; i <= n;i++) {
