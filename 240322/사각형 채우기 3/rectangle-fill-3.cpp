@@ -2,12 +2,12 @@
 #define MAXN 1000
 using namespace std;
 
-long long dp[MAXN + 1] = {1, 2, 7, 0, };
+int dp[MAXN + 1] = {1, 2, 7, 0, };
 
 int sum(int x){
     int ans = 0;
     for (int i = 0; i <= x; i++){
-        ans += dp[i];
+        ans += dp[i] % 1000000007;
     }
     return ans;
 }
