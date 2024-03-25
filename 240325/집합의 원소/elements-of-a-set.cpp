@@ -5,13 +5,6 @@ using namespace std;
 
 int parents[M + 1];
 
-void union_chk(int a, int b)
-{
-    if (parents[a] == parents[b])
-        printf("1\n");
-    else
-        printf("0\n");
-}
 
 int find(int x)
 {
@@ -19,6 +12,14 @@ int find(int x)
     int last = parents[x];
     parents[x] = find(parents[x]);
     return parents[x];
+}
+
+void union_chk(int a, int b)
+{
+    if (find(a) == find(b))
+        printf("1\n");
+    else
+        printf("0\n");
 }
 
 void union_(int a, int b)
