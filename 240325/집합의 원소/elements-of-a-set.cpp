@@ -15,11 +15,9 @@ void union_chk(int a, int b)
 
 int find(int x)
 {
-    if (x != parents[x])
-    {
-        int last = parents[x];
-        parents[x] = find(parents[x]);
-    }
+    if (parents[x] == x) return x;
+    int last = parents[x];
+    parents[x] = find(parents[x]);
     return parents[x];
 }
 
